@@ -12,6 +12,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using ArcaneAPI.Models;
+using ArcaneAPI.Models.GameModels;
+using ArcaneAPI.Models.Context;
 
 namespace ArcaneAPI.Controllers
 {
@@ -21,6 +23,7 @@ namespace ArcaneAPI.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private MainContext context = new MainContext();
 
         public AccountController()
         {
@@ -146,7 +149,51 @@ namespace ArcaneAPI.Controllers
             }
 
             return Ok();
+        }  
+
+        // POST api/Account/Register
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
+            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                // Send an email with this link
+                //string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                //await UserManager.SendEmailAsync(user.Id, "Регистрация на сервере Arcane Mu", "Для завершения регистрации перейдите по ссылке: " + callbackUrl);
+
+                MEMB_INFO noob = new MEMB_INFO(model.UserName, model.Password, model.Email);
+                context.MEMB_INFO.Add(noob);
+                context.SaveChanges();
+            }
+            else
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
         }        
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _userManager != null)
+            {
+                _userManager.Dispose();
+                _userManager = null;
+            }
+
+            base.Dispose(disposing);
+        }
 
         // POST api/Account/RemoveLogin
         [Route("RemoveLogin")]
@@ -175,39 +222,6 @@ namespace ArcaneAPI.Controllers
             }
 
             return Ok();
-        }        
-
-        // POST api/Account/Register
-        [AllowAnonymous]
-        [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
-
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            return Ok();
-        }        
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
-
-            base.Dispose(disposing);
         }
 
         #region Helpers
