@@ -23,10 +23,8 @@ namespace ArcaneAPI.Models.GameModels
 
         public byte G_WareStatus { get; set; }
 
-        [ForeignKey("Name")]
         public virtual Character Character { get; set; }
 
-        [ForeignKey("G_Name")]
         public virtual Guild Guild { get; set; }
 
         internal GuildMemberDTO DTO

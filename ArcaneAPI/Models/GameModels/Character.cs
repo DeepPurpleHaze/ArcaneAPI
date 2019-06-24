@@ -126,6 +126,8 @@ namespace ArcaneAPI.Models.GameModels
 
         public virtual GuildMember GuildMember { get; set; }
 
+        public virtual MEMB_STAT MEMB_STAT { get; set; }
+
         internal CharacterDTO DTO
         {
             get { return new CharacterDTO(this); }
@@ -149,6 +151,9 @@ namespace ArcaneAPI.Models.GameModels
             MasterResetCount = item.MasterResetCount;
             MarryName = item.MarryName;
             Guild = item.GuildMember?.G_Name;
+            ConnectStat = (item.MEMB_STAT?.ConnectStat ?? 0) == 0 ? false : true;
+            DisñonnectTime = item.MEMB_STAT?.DisConnectTM ?? DateTime.MinValue;
+            ConnectTime = item.MEMB_STAT?.ConnectTM ?? DateTime.MinValue;
         }
 
         public string Name { get; set; }
@@ -171,8 +176,6 @@ namespace ArcaneAPI.Models.GameModels
 
         public DateTime? MDate { get; set; }
 
-        public DateTime? LDate { get; set; }
-
         public int ResetCount { get; set; }
 
         public int MasterResetCount { get; set; }
@@ -180,5 +183,11 @@ namespace ArcaneAPI.Models.GameModels
         public string MarryName { get; set; }
 
         public string Guild { get; set; }
+
+        public bool ConnectStat { get; set; }
+
+        public DateTime DisñonnectTime { get; set; }
+
+        public DateTime ConnectTime { get; set; }
     }
 }

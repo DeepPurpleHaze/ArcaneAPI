@@ -7,7 +7,7 @@ using System.Web;
 
 namespace ArcaneAPI.Models.Context
 {
-    public class GenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<TEntity> : IDisposable where TEntity : class 
     {
         internal MainContext context = new MainContext();
         internal DbSet<TEntity> dbSet;
@@ -37,6 +37,7 @@ namespace ArcaneAPI.Models.Context
             {
                 query = query.Include(includeProperty);
             }
+
             if (orderBy != null)
             {
                 return orderBy(query).ToList();
@@ -139,6 +140,11 @@ namespace ArcaneAPI.Models.Context
             {
                 context.SetPropertyModifiedTrue(entityToUpdate, item.Trim());
             }
+        }
+
+        public void Dispose()
+        {
+            context.Dispose();
         }
     }
 }

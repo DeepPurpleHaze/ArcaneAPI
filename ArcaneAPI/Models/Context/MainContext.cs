@@ -1,10 +1,6 @@
 ﻿using ArcaneAPI.Models.CustomModels;
 using ArcaneAPI.Models.GameModels;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Web;
 
 namespace ArcaneAPI.Models.Context
 {
@@ -73,6 +69,11 @@ namespace ArcaneAPI.Models.Context
             modelBuilder.Entity<Character>()
                 .HasOptional(e => e.GuildMember)
                 .WithRequired(e => e.Character);
+
+            modelBuilder.Entity<Character>()
+               .HasRequired(e => e.MEMB_STAT)
+               .WithMany(e => e.Characters)
+               .HasForeignKey(e => e.AccountID);
 
             modelBuilder.Entity<Guild>()
                 .HasMany(e => e.GuildMembers)

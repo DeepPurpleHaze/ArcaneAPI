@@ -27,5 +27,7 @@ namespace ArcaneAPI.Models.GameModels
         public DateTime? DisConnectTM { get; set; }
 
         public int? OnlineHours { get; set; }
+
+        public virtual ICollection<Character> Characters { get; set; }
     }
 }
