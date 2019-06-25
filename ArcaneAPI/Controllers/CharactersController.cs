@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ArcaneAPI.Models.Context;
@@ -17,7 +12,6 @@ namespace ArcaneAPI.Controllers
     [RoutePrefix("api/Characters")]
     public class CharactersController : ApiController
     {
-        private MainContext db = new MainContext();
         private GenericRepository<Character> Repository = new GenericRepository<Character>();
 
         // GET: api/Characters
@@ -50,11 +44,6 @@ namespace ArcaneAPI.Controllers
                 Repository.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool CharacterExists(string id)
-        {
-            return db.Character.Count(e => e.Name == id) > 0;
         }
     }
 }

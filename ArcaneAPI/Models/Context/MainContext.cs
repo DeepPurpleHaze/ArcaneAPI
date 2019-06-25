@@ -1,12 +1,20 @@
 ﻿using ArcaneAPI.Models.CustomModels;
 using ArcaneAPI.Models.GameModels;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 
 namespace ArcaneAPI.Models.Context
 {
     public class MainContext: DbContext
     {
         public MainContext() : base("name=DefaultConnection") { }
+
+        public IEnumerable<T> ExecuteStoredProcedure<T>(string query, params object[] parameters)
+        {
+            Database.CommandTimeout = 180;
+            return Database.SqlQuery<T>(query, parameters).ToList();
+        }
 
         //Game tables
 

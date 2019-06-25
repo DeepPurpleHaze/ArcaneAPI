@@ -120,7 +120,6 @@ namespace ArcaneAPI.Models.Context
 
         public virtual void Update(TEntity entityToUpdate)
         {
-
             dbSet.Attach(entityToUpdate);
             context.MarkAsModified(entityToUpdate);
         }
@@ -142,9 +141,44 @@ namespace ArcaneAPI.Models.Context
             }
         }
 
+        public IEnumerable<T> SQLQuery<T>(string sql, params object[] parameters)
+        {
+            return context.ExecuteStoredProcedure<T>(sql, parameters);
+        }
+
+        public virtual void SaveChanges()
+        {
+            context.SaveChanges();
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // dispose managed state (managed objects).
+                }
+
+                context.Dispose();
+
+                disposedValue = true;
+            }
+        }
+
+        ~GenericRepository()
+        {
+            Dispose(false);
+        }
+                
         public void Dispose()
         {
-            context.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+        #endregion
     }
 }
