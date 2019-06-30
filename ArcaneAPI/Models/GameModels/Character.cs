@@ -1,5 +1,6 @@
 namespace ArcaneAPI.Models.GameModels
 {
+    using ArcaneAPI.Models.Context;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -189,5 +190,15 @@ namespace ArcaneAPI.Models.GameModels
         public DateTime DisñonnectTime { get; set; }
 
         public DateTime ConnectTime { get; set; }
+    }
+
+    internal class CharacterRepository: ModelRepository<Character>
+    {
+        public CharacterRepository() : base(IPS)
+        {
+
+        }
+
+        public static string IPS => @"GuildMember, MEMB_STAT";
     }
 }

@@ -217,6 +217,7 @@
     </Compile>
     <Compile Include="Models\Context\GenericRepository.cs" />
     <Compile Include="Models\Context\MainContext.cs" />
+    <Compile Include="Models\Context\ModelRepository.cs" />
     <Compile Include="Models\CustomModels\FAQ.cs" />
     <Compile Include="Models\CustomModels\News.cs" />
     <Compile Include="Models\GameModels\AccountCharacter.cs" />

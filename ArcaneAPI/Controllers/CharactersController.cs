@@ -12,14 +12,13 @@ namespace ArcaneAPI.Controllers
     [RoutePrefix("api/Characters")]
     public class CharactersController : ApiController
     {
-        private GenericRepository<Character> Repository = new GenericRepository<Character>();
+        private CharacterRepository Repository = new CharacterRepository();
 
         // GET: api/Characters
         [ResponseType(typeof(IEnumerable<Character>))]
         public IHttpActionResult GetCharacter()
         {
-            return Ok(Repository.Get(includeProperties: "GuildMember, MEMB_STAT").Select(d => d.DTO));
-            //return db.Character;
+            return Ok(Repository.GetWithIncludes().Select(d => d.DTO));
         }
 
         // GET: api/Characters/5
@@ -35,6 +34,16 @@ namespace ArcaneAPI.Controllers
             }
 
             return Ok(character);
+        }
+
+        // GET: api/Characters/Top
+        [HttpGet]
+        [Route("Top")]
+        [ResponseType(typeof(IEnumerable<Character>))]
+        public IHttpActionResult Top(int race = 0)
+        {
+            return Ok(Repository.Get(orderBy: q => q.OrderByDescending(c => c.MasterResetCount).ThenByDescending(c => c.ResetCount).ThenByDescending(c => c.cLevel).ThenBy(c => c.Name), includeProperties: "GuildMember, MEMB_STAT", take: 100).Select(d => d.DTO));
+            //return db.Character;
         }
 
         protected override void Dispose(bool disposing)

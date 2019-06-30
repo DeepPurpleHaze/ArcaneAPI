@@ -16,6 +16,7 @@ namespace ArcaneAPI.Controllers
     public class GuildsController : ApiController
     {
         private MainContext db = new MainContext();
+        private GenericRepository<Guild> Repository = new GenericRepository<Guild>();
 
         // GET: api/Guilds
         public IQueryable<Guild> GetGuild()
@@ -121,7 +122,7 @@ namespace ArcaneAPI.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                Repository.Dispose();
             }
             base.Dispose(disposing);
         }

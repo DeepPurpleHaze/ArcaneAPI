@@ -7,20 +7,21 @@ using System.Web;
 
 namespace ArcaneAPI.Models.Context
 {
-    public class GenericRepository<TEntity> : IDisposable where TEntity : class 
+    internal class GenericRepository<TEntity> : IDisposable where TEntity : class 
     {
         internal MainContext context = new MainContext();
         internal DbSet<TEntity> dbSet;
+        private string includePropertyString { get; set; }
 
-        public GenericRepository()
+        internal GenericRepository()
         {
             dbSet = context.Set<TEntity>();
         }
 
-        public virtual IEnumerable<TEntity> Get(
+        internal virtual IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "")
+            string includeProperties = "", int? take = null)
         {
             IQueryable<TEntity> query = dbSet;
             if (filter == null)
@@ -40,18 +41,23 @@ namespace ArcaneAPI.Models.Context
 
             if (orderBy != null)
             {
-                return orderBy(query).ToList();
+                query = orderBy(query);
             }
-            else
+
+            if(take.HasValue)
+            {
+                return query.Take(take.Value).ToList();
+            }
+            else 
             {
                 return query.ToList();
             }
         }
 
-        public virtual IEnumerable<TEntity> GetAsNoTracking(
+        internal virtual IEnumerable<TEntity> GetAsNoTracking(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "")
+            string includeProperties = "", int? take = null)
         {
             IQueryable<TEntity> query = dbSet;
 
@@ -59,14 +65,21 @@ namespace ArcaneAPI.Models.Context
             {
                 query = query.AsNoTracking().Where(filter);
             }
+
             foreach (var includeProperty in includeProperties.Split
                 (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 query = query.AsNoTracking().Include(includeProperty);
             }
+
             if (orderBy != null)
             {
-                return orderBy(query).AsNoTracking().ToList();
+                query = orderBy(query).AsNoTracking();
+            }
+
+            if (take.HasValue)
+            {
+                return query.AsNoTracking().Take(take.Value).ToList();
             }
             else
             {
@@ -74,7 +87,7 @@ namespace ArcaneAPI.Models.Context
             }
         }
 
-        public virtual TEntity GetByID(object id)
+        internal virtual TEntity GetByID(object id)
         {
             TEntity entity = dbSet.Find(id);
             if (entity == null)
@@ -84,17 +97,17 @@ namespace ArcaneAPI.Models.Context
             return entity;
         }
 
-        public virtual void Insert(TEntity entity)
+        internal virtual void Insert(TEntity entity)
         {
             dbSet.Add(entity);
         }
 
-        public virtual void InsertRange(IEnumerable<TEntity> entities)
+        internal virtual void InsertRange(IEnumerable<TEntity> entities)
         {
             dbSet.AddRange(entities);
         }
 
-        public virtual void Delete(object id)
+        internal virtual void Delete(object id)
         {
             TEntity entityToDelete = dbSet.Find(id);
             if (entityToDelete == null)
@@ -104,7 +117,7 @@ namespace ArcaneAPI.Models.Context
             Delete(entityToDelete);
         }
 
-        public virtual void Delete(TEntity entityToDelete)
+        internal virtual void Delete(TEntity entityToDelete)
         {
             if (context.IsDetached(entityToDelete))
             {
@@ -113,18 +126,25 @@ namespace ArcaneAPI.Models.Context
             dbSet.Remove(entityToDelete);
         }
 
-        public virtual void DeleteRange(IEnumerable<TEntity> entitiesToDelete)
+        internal virtual void DeleteRange(IEnumerable<TEntity> entitiesToDelete)
         {
+            foreach (var entityToDelete in entitiesToDelete)
+            {
+                if (context.IsDetached(entityToDelete))
+                {
+                    dbSet.Attach(entityToDelete);
+                }
+            }
             dbSet.RemoveRange(entitiesToDelete);
         }
 
-        public virtual void Update(TEntity entityToUpdate)
+        internal virtual void Update(TEntity entityToUpdate)
         {
             dbSet.Attach(entityToUpdate);
             context.MarkAsModified(entityToUpdate);
         }
 
-        public virtual void UpdateRange(IEnumerable<TEntity> entitiesToUpdate)
+        internal virtual void UpdateRange(IEnumerable<TEntity> entitiesToUpdate)
         {
             foreach (var entity in entitiesToUpdate)
             {
@@ -132,7 +152,7 @@ namespace ArcaneAPI.Models.Context
             }
         }
 
-        public virtual void UpdateFields(TEntity entityToUpdate, string fieldsToUpdate)
+        internal virtual void UpdateFields(TEntity entityToUpdate, string fieldsToUpdate)
         {
             dbSet.Attach(entityToUpdate);
             foreach (var item in fieldsToUpdate.Split(','))
@@ -141,12 +161,12 @@ namespace ArcaneAPI.Models.Context
             }
         }
 
-        public IEnumerable<T> SQLQuery<T>(string sql, params object[] parameters)
+        internal IEnumerable<T> SQLQuery<T>(string sql, params object[] parameters)
         {
             return context.ExecuteStoredProcedure<T>(sql, parameters);
         }
 
-        public virtual void SaveChanges()
+        internal virtual void SaveChanges()
         {
             context.SaveChanges();
         }
