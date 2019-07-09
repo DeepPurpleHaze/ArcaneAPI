@@ -129,10 +129,7 @@ namespace ArcaneAPI.Models.GameModels
 
         public virtual MEMB_STAT MEMB_STAT { get; set; }
 
-        internal CharacterDTO DTO
-        {
-            get { return new CharacterDTO(this); }
-        }
+        internal CharacterDTO DTO { get { return new CharacterDTO(this); } }
     }
 
     internal class CharacterDTO
@@ -194,11 +191,10 @@ namespace ArcaneAPI.Models.GameModels
 
     internal class CharacterRepository: ModelRepository<Character>
     {
-        public CharacterRepository() : base(IPS)
-        {
-
-        }
+        public CharacterRepository() : base(IPS) { }
 
         public static string IPS => @"GuildMember, MEMB_STAT";
+
+
     }
 }

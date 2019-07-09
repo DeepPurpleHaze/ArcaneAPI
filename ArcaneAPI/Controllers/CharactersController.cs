@@ -15,7 +15,7 @@ namespace ArcaneAPI.Controllers
         private CharacterRepository Repository = new CharacterRepository();
 
         // GET: api/Characters
-        [ResponseType(typeof(IEnumerable<Character>))]
+        [ResponseType(typeof(IEnumerable<CharacterDTO>))]
         public IHttpActionResult GetCharacter()
         {
             return Ok(Repository.GetWithIncludes().Select(d => d.DTO));

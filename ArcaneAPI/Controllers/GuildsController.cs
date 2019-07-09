@@ -15,17 +15,17 @@ namespace ArcaneAPI.Controllers
 {
     public class GuildsController : ApiController
     {
-        private MainContext db = new MainContext();
-        private GenericRepository<Guild> Repository = new GenericRepository<Guild>();
+        private GuildRepository Repository = new GuildRepository();
 
         // GET: api/Guilds
-        public IQueryable<Guild> GetGuild()
+        [ResponseType(typeof(IEnumerable<GuildDTO>))]
+        public IHttpActionResult GetGuild()
         {
-            return db.Guild;
+            return Ok(Repository.GetWithIncludes());
         }
 
         // GET: api/Guilds/5
-        [ResponseType(typeof(Guild))]
+        [ResponseType(typeof(GuildDTO))]
         public IHttpActionResult GetGuild(string id)
         {
             Guild guild = db.Guild.Find(id);

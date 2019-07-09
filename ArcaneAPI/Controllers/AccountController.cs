@@ -25,9 +25,7 @@ namespace ArcaneAPI.Controllers
         private ApplicationUserManager _userManager;
         private MainContext context = new MainContext();
 
-        public AccountController()
-        {
-        }
+        public AccountController() { }
 
         public AccountController(ApplicationUserManager userManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
