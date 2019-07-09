@@ -40,6 +40,8 @@ namespace ArcaneAPI.Models.Context
 
         public virtual DbSet<FAQ> FAQ { get; set; }
 
+        //Model creating
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Guild>()
