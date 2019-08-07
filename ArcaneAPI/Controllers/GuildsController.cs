@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using ArcaneAPI.Models.Context;
 using ArcaneAPI.Models.GameModels;
 
 namespace ArcaneAPI.Controllers
@@ -35,23 +29,7 @@ namespace ArcaneAPI.Controllers
             }
 
             return Ok(guild);
-        }        
-
-        // DELETE: api/Guilds/5
-        //[ResponseType(typeof(Guild))]
-        //public IHttpActionResult DeleteGuild(string id)
-        //{
-        //    Guild guild = db.Guild.Find(id);
-        //    if (guild == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    db.Guild.Remove(guild);
-        //    db.SaveChanges();
-
-        //    return Ok(guild);
-        //}
+        }
 
         protected override void Dispose(bool disposing)
         {

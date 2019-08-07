@@ -93,6 +93,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
@@ -207,19 +208,17 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CharactersController.cs" />
-    <Compile Include="Controllers\FAQsController.cs" />
     <Compile Include="Controllers\GuildsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\NewsController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\ArticlesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Context\GenericRepository.cs" />
     <Compile Include="Models\Context\MainContext.cs" />
     <Compile Include="Models\Context\ModelRepository.cs" />
-    <Compile Include="Models\CustomModels\FAQ.cs" />
-    <Compile Include="Models\CustomModels\News.cs" />
+    <Compile Include="Models\CustomModels\Article.cs" />
+    <Compile Include="Models\CustomModels\ArticleType.cs" />
     <Compile Include="Models\GameModels\AccountCharacter.cs" />
     <Compile Include="Models\GameModels\Character.cs" />
     <Compile Include="Models\GameModels\Guild.cs" />

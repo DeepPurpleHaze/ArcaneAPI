@@ -36,9 +36,7 @@ namespace ArcaneAPI.Models.Context
 
         //Custom tables
 
-        public virtual DbSet<News> News { get; set; }
-
-        public virtual DbSet<FAQ> FAQ { get; set; }
+        public virtual DbSet<Article> Article { get; set; }
 
         //Model creating
 
