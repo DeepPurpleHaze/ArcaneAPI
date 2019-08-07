@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web.Http;
@@ -7,28 +8,50 @@ using ArcaneAPI.Models.GameModels;
 
 namespace ArcaneAPI.Controllers
 {
+    [RoutePrefix("api/Guilds")]
     public class GuildsController : ApiController
     {
         private GuildRepository Repository = new GuildRepository();
 
-        // GET: api/Guilds
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("GetAll")]
         [ResponseType(typeof(IEnumerable<GuildDTO>))]
-        public IHttpActionResult GetGuild()
+        public IHttpActionResult GetGuilds()
         {
-            return Ok(Repository.GetWithIncludes().Select(d => d.DTO));
-        }
-
-        // GET: api/Guilds/5
-        [ResponseType(typeof(GuildDTO))]
-        public IHttpActionResult GetGuild(string id)
-        {
-            Guild guild = Repository.GetByID(id);
-            if (guild == null)
+            try
+            {
+                return Ok(Repository.GetWithIncludes().Select(d => d.DTO));
+            }
+            catch (NullReferenceException nre)
             {
                 return NotFound();
             }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-            return Ok(guild);
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("GetById")]
+        [ResponseType(typeof(GuildDTO))]
+        public IHttpActionResult GetGuild(string id)
+        {
+            try
+            {
+                Guild guild = Repository.GetByID(id);
+                return Ok(guild.DTO);
+            }
+            catch (NullReferenceException nre)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         protected override void Dispose(bool disposing)
