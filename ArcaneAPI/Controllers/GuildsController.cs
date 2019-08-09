@@ -8,12 +8,12 @@ using ArcaneAPI.Models.GameModels;
 
 namespace ArcaneAPI.Controllers
 {
+    [AllowAnonymous]
     [RoutePrefix("api/Guilds")]
     public class GuildsController : ApiController
     {
         private GuildRepository Repository = new GuildRepository();
-
-        [AllowAnonymous]
+                
         [HttpGet]
         [Route("GetAll")]
         [ResponseType(typeof(IEnumerable<GuildDTO>))]
@@ -33,7 +33,6 @@ namespace ArcaneAPI.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         [Route("GetById")]
         [ResponseType(typeof(GuildDTO))]

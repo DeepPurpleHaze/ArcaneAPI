@@ -134,6 +134,33 @@ namespace ArcaneAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        [Route("UploadFile")]
+        [ResponseType(typeof(Dictionary<string, string>))]
+        public IHttpActionResult UploadFile()
+        {
+            try
+            {
+            Request request = new Request();
+            Dictionary<string, string> toReturn = new Dictionary<string, string>();
+                foreach (string file in request.Collection())
+                {
+                    toReturn.Add("DocumentPath", request.SaveFile(file));
+                    toReturn.Add("Name", request.GetFileName(file));
+                }
+                return Ok(toReturn);
+            }
+            catch (NullReferenceException nre)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

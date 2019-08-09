@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
-using ArcaneAPI.Models.Context;
 using ArcaneAPI.Models.GameModels;
 
 namespace ArcaneAPI.Controllers
@@ -14,26 +14,43 @@ namespace ArcaneAPI.Controllers
     {
         private CharacterRepository Repository = new CharacterRepository();
 
-        // GET: api/Characters
+        [HttpGet]
+        [Route("GetAll")]
         [ResponseType(typeof(IEnumerable<CharacterDTO>))]
-        public IHttpActionResult GetCharacter()
+        public IHttpActionResult GetCharacters()
         {
-            return Ok(Repository.GetWithIncludes().Select(d => d.DTO));
-        }
-
-        // GET: api/Characters/5
-        [ResponseType(typeof(CharacterDTO))]
-        public IHttpActionResult GetCharacter(string id)
-        {
-            var temp = Repository.Get(d => d.Name == id, includeProperties: "GuildMember, MEMB_STAT")?.FirstOrDefault();
-            CharacterDTO character = temp?.DTO;
-
-            if (character == null)
+            try
+            { 
+                return Ok(Repository.GetWithIncludes().Select(d => d.DTO));
+            }
+            catch (NullReferenceException nre)
             {
                 return NotFound();
             }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-            return Ok(character);
+        [HttpGet]
+        [Route("GetById")]
+        [ResponseType(typeof(CharacterDTO))]
+        public IHttpActionResult GetCharacter(string id)
+        {
+            try
+            {
+                CharacterDTO character = Repository.GetById(id).DTO;
+                return Ok(character);
+            }            
+            catch (NullReferenceException nre)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         // GET: api/Characters/Top
@@ -42,8 +59,23 @@ namespace ArcaneAPI.Controllers
         [ResponseType(typeof(IEnumerable<Character>))]
         public IHttpActionResult Top(int race = 0)
         {
-            return Ok(Repository.Get(orderBy: q => q.OrderByDescending(c => c.MasterResetCount).ThenByDescending(c => c.ResetCount).ThenByDescending(c => c.cLevel).ThenBy(c => c.Name), includeProperties: "GuildMember, MEMB_STAT", take: 100).Select(d => d.DTO));
-            //return db.Character;
+            try
+            { 
+                return Ok(Repository.Get(orderBy: q => q.OrderByDescending(c => c.MasterResetCount)
+                    .ThenByDescending(c => c.ResetCount)
+                    .ThenByDescending(c => c.cLevel)
+                    .ThenBy(c => c.Name), 
+                    includeProperties: "GuildMember, MEMB_STAT", 
+                    take: 100).Select(d => d.DTO));
+            }            
+            catch (NullReferenceException nre)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         protected override void Dispose(bool disposing)

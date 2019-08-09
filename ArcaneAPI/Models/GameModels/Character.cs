@@ -6,6 +6,7 @@ namespace ArcaneAPI.Models.GameModels
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Linq;
 
     [Table("Character")]
     public partial class Character
@@ -195,6 +196,9 @@ namespace ArcaneAPI.Models.GameModels
 
         public static string IPS => @"GuildMember, MEMB_STAT";
 
-
+        public Character GetById(string id)
+        {
+            return GetWithIncludes(d => d.Name == id)?.FirstOrDefault();
+        }
     }
 }
