@@ -1,12 +1,13 @@
 namespace ArcaneAPI.Models.GameModels
 {
     using ArcaneAPI.Models.Context;
+    using ArcaneAPI.Models.CustomModels;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
     using System.Linq;
+    using System.Linq.Expressions;
 
     [Table("Character")]
     public partial class Character
@@ -130,6 +131,9 @@ namespace ArcaneAPI.Models.GameModels
 
         public virtual MEMB_STAT MEMB_STAT { get; set; }
 
+        [ForeignKey("Class")]
+        public virtual CharacterClass CharacterClass { get; set; }
+
         internal CharacterDTO DTO { get { return new CharacterDTO(this); } }
     }
 
@@ -153,6 +157,7 @@ namespace ArcaneAPI.Models.GameModels
             ConnectStat = (item.MEMB_STAT?.ConnectStat ?? 0) == 0 ? false : true;
             DisñonnectTime = item.MEMB_STAT?.DisConnectTM ?? DateTime.MinValue;
             ConnectTime = item.MEMB_STAT?.ConnectTM ?? DateTime.MinValue;
+            CharacterClass = item.CharacterClass.DTO;
         }
 
         public string Name { get; set; }
@@ -188,17 +193,54 @@ namespace ArcaneAPI.Models.GameModels
         public DateTime DisñonnectTime { get; set; }
 
         public DateTime ConnectTime { get; set; }
+
+        public CharacterClassDTO CharacterClass { get; set; }
     }
 
     internal class CharacterRepository: ModelRepository<Character>
     {
         public CharacterRepository() : base(IPS) { }
 
-        public static string IPS => @"GuildMember, MEMB_STAT";
+        public static string IPS => @"GuildMember, MEMB_STAT, CharacterClass";
 
         public Character GetById(string id)
         {
             return GetWithIncludes(d => d.Name == id)?.FirstOrDefault();
+        }
+
+        public IEnumerable<Character> Top(int race)
+        {
+            Expression<Func<Character, bool>> filter = null;
+
+            switch (race)
+            {
+                case 1:
+                    filter = d => d.Class <= 2;
+                    break;
+                case 2:
+                    filter = d => d.Class >= 16 && d.Class <= 18;
+                    break;
+                case 3:
+                    filter = d => d.Class >= 32 && d.Class <= 34;
+                    break;
+                case 4:
+                    filter = d => d.Class >= 80 && d.Class <= 82;
+                    break;
+                case 5:
+                    filter = d => d.Class == 48 || d.Class == 50;
+                    break;
+                case 6:
+                    filter = d => d.Class == 64 || d.Class == 66;
+                    break;
+                default:
+                    break;
+            }
+            return GetWithIncludes(filter: filter,
+                orderBy: q => q.OrderByDescending(c => c.MasterResetCount)
+                .ThenByDescending(c => c.ResetCount)
+                .ThenByDescending(c => c.cLevel)
+                .ThenBy(c => c.Name),
+                take: 100);
         }
     }
 }

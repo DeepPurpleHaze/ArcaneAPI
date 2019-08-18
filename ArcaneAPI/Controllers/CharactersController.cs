@@ -15,25 +15,6 @@ namespace ArcaneAPI.Controllers
         private CharacterRepository Repository = new CharacterRepository();
 
         [HttpGet]
-        [Route("GetAll")]
-        [ResponseType(typeof(IEnumerable<CharacterDTO>))]
-        public IHttpActionResult GetCharacters()
-        {
-            try
-            { 
-                return Ok(Repository.GetWithIncludes().Select(d => d.DTO));
-            }
-            catch (NullReferenceException nre)
-            {
-                return NotFound();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet]
         [Route("GetById")]
         [ResponseType(typeof(CharacterDTO))]
         public IHttpActionResult GetCharacter(string id)
@@ -53,7 +34,6 @@ namespace ArcaneAPI.Controllers
             }
         }
 
-        // GET: api/Characters/Top
         [HttpGet]
         [Route("Top")]
         [ResponseType(typeof(IEnumerable<Character>))]
@@ -61,12 +41,7 @@ namespace ArcaneAPI.Controllers
         {
             try
             { 
-                return Ok(Repository.Get(orderBy: q => q.OrderByDescending(c => c.MasterResetCount)
-                    .ThenByDescending(c => c.ResetCount)
-                    .ThenByDescending(c => c.cLevel)
-                    .ThenBy(c => c.Name), 
-                    includeProperties: "GuildMember, MEMB_STAT", 
-                    take: 100).Select(d => d.DTO));
+                return Ok(Repository.Top(race).Select(d => d.DTO));
             }            
             catch (NullReferenceException nre)
             {

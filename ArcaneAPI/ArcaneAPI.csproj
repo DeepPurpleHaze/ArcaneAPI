@@ -221,6 +221,7 @@
     <Compile Include="Models\Context\ModelRepository.cs" />
     <Compile Include="Models\CustomModels\Article.cs" />
     <Compile Include="Models\CustomModels\ArticleType.cs" />
+    <Compile Include="Models\CustomModels\CharacterClass.cs" />
     <Compile Include="Models\CustomModels\HttpRequest.cs" />
     <Compile Include="Models\GameModels\AccountCharacter.cs" />
     <Compile Include="Models\GameModels\Character.cs" />

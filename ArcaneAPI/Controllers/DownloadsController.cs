@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,8 +10,8 @@ namespace ArcaneAPI.Controllers
     public class DownloadsController : ApiController
     {
         [HttpGet]
-        [Route("api/FileAPI/GetFile")]
-        public HttpResponseMessage GetFile(string fileName)
+        [Route("api/FileAPI/GetClientFile")]
+        public HttpResponseMessage GetClientFile(string fileName)
         {
             //Create HTTP Response.
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);

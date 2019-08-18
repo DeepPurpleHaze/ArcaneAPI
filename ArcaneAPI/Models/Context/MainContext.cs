@@ -38,6 +38,10 @@ namespace ArcaneAPI.Models.Context
 
         public virtual DbSet<Article> Article { get; set; }
 
+        public virtual DbSet<ArticleType> ArticleType { get; set; }
+
+        public virtual DbSet<CharacterClass> CharacterClass { get; set; }
+
         //Model creating
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
