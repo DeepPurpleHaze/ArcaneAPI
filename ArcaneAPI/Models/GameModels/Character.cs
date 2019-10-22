@@ -1,7 +1,7 @@
 namespace ArcaneAPI.Models.GameModels
 {
-    using ArcaneAPI.Models.Context;
-    using ArcaneAPI.Models.CustomModels;
+    using Context;
+    using CustomModels;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -120,8 +120,6 @@ namespace ArcaneAPI.Models.GameModels
         public int QuestVar { get; set; }
 
         public int QuestStat { get; set; }
-
-        public int Rank { get; set; }
 
         public int PointsCount { get; set; }
 

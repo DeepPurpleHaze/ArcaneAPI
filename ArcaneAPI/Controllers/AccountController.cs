@@ -161,7 +161,6 @@ namespace ArcaneAPI.Controllers
 
             var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
             if (result.Succeeded)
             {
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
@@ -169,6 +168,8 @@ namespace ArcaneAPI.Controllers
                 //string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                 //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 //await UserManager.SendEmailAsync(user.Id, "Регистрация на сервере Arcane Mu", "Для завершения регистрации перейдите по ссылке: " + callbackUrl);
+
+                UserManager.AddToRole(user.Id, "user");
 
                 MEMB_INFO noob = new MEMB_INFO(model.UserName, model.Password, model.Email);
                 context.MEMB_INFO.Add(noob);
